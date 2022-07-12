@@ -1,0 +1,13 @@
+subjectAltName = @alt_names
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage=serverAuth
+
+[alt_names]
+DNS.1   = vault.ronosentono.com
+DNS.2   = test01.ronosentono.com
+DNS.3   = vault
+DNS.5   = vault01
+IP.1    = 10.10.1.2

@@ -1,0 +1,68 @@
+image: docker/compose:1.25.0-rc2
+
+
+variables:
+  DOCKER_DRIVER: overlay
+  # CI_DEBUG_TRACE: "true"
+  GIT_SSL_NO_VERIFY: "true"
+  SONAR_URL: "http://10.12.2.9:65000"
+  SONAR_PROJ_KEY: "ronosentono:vault"
+  SONAR_PROJ_NAME: "vault"
+  PROJ_SOURCES: "${CI_PROJECT_DIR}/vault"
+  SONAR_SCANNER: "/home/sonar/sonar-scanner/bin/sonar-scanner"
+  VAULT_IMG: "image_vault"
+  VAULT_TAG: "latest"
+  DOCKER_REPO: "docker-int.ronosentono.com:5000"
+
+stages:
+  - build
+  - push
+  - deploy
+
+services:
+  - name: docker:dind
+    command: ["--insecure-registry=docker-int.ronosentono.com:5000"]
+
+before_script:
+  - echo Before Script
+  - echo $(pwd)
+  - docker info
+  - docker-compose --version
+
+build vault:
+  stage: build
+
+  script:
+    - echo **DOCKER-COMPOSE BUILD
+    - docker-compose build
+  tags:
+    - docker
+
+push:
+  stage: push
+  script:
+    - docker-compose -f docker-compose.yml build 
+    - docker-compose -f docker-compose.yml push
+
+  only:
+    - develop
+  tags:
+    - docker
+
+Deploy to Dockrunner:
+  stage: deploy
+  before_script:
+    - echo Before Script in Deploy 
+
+  script:
+    - docker-compose down
+    - docker-compose up -d --no-recreate
+
+  after_script:
+    - echo After Script in Deploy
+
+  only:
+    - develop
+  tags:
+    - docker
+

@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+
+  vault:
+    image: VAULT:${VAULT_TAG:-latest}
+    build:
+      context: ./vault
+      dockerfile: Dockerfile
+    ports:
+      - 8200:8200
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/policies:/vault/policies
+      - ./vault/data:/vault/data
+      - ./vault/logs:/vault/logs
+      - /etc/vault-ssl:/etc/ssl
+      - /vault/init/:/vault/init/
+    networks:
+      - app_net
+    environment:
+      - VAULT_ADDR=https://127.0.0.1:8200
+
+    cap_add:
+      - IPC_LOCK
+
+networks:
+  app_net:
+    driver: bridge
