@@ -1,12 +1,6 @@
 # Vault project
 
-Vault stores sensitive data such as tokens, keys, passwords, etc. This project uses Consul to store the data.
-
-## Getting Started
-
-```bash
-git clone [repo]
-```
+Vault stores sensitive data such as tokens, keys, passwords, etc. The scripts set up Vault automatically. 
 
 ## Running Vault
 
